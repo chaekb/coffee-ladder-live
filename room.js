@@ -62,7 +62,7 @@ db,
 );
 
 
-function join(){
+async function join(){
 
 
 const name =
