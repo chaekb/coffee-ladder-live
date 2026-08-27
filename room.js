@@ -30,6 +30,13 @@ new URLSearchParams(location.search);
 const room =
 params.get("room");
 
+const host =
+params.get("host");
+
+
+const isHost =
+sessionStorage.getItem("host")
+=== host;
 
 
 document
