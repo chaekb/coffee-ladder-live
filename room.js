@@ -11,7 +11,9 @@ set,
 
 push,
 
-onValue
+onValue,
+
+get
 
 }
 
