@@ -512,14 +512,11 @@ ctx.stroke();
 
 }
 
-function startGame(userKey){
-
-const keys =
-Object.keys(window.currentUsers);
+function startGame(userName){
 
 
 const userIndex =
-keys.indexOf(userKey);
+window.currentUsers.indexOf(userName);
 
 
 
