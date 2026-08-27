@@ -50,68 +50,7 @@ const myNickname =
 sessionStorage.getItem("nickname");
 
 
-if(
-sessionStorage.getItem("joined")
-==="true"
-){
 
-document.addEventListener(
-"DOMContentLoaded",
-()=>{
-
-
-document
-.getElementById("nickname")
-.style.display="none";
-
-
-document
-.getElementById("joinBtn")
-.style.display="none";
-
-
-});
-
-}
-
-document.addEventListener(
-"DOMContentLoaded",
-()=>{
-
-
-const roomNumber =
-document.getElementById(
-"roomNumber"
-);
-
-
-if(roomNumber){
-
-roomNumber.innerHTML =
-"방 번호 : " + room;
-
-}
-
-
-
-if(!isHost){
-
-const btn =
-document.getElementById(
-"createLadderBtn"
-);
-
-
-if(btn){
-
-btn.style.display="none";
-
-}
-
-}
-
-
-});
 
 
 const usersRef =
@@ -146,7 +85,7 @@ const userRef =
 push(usersRef);
 
 
-set(
+await set(
 userRef,
 {
 
@@ -195,20 +134,86 @@ document.addEventListener(
 "DOMContentLoaded",
 ()=>{
 
+
+// 방 번호 표시
+
+const roomNumber =
+document.getElementById(
+"roomNumber"
+);
+
+
+if(roomNumber){
+
+roomNumber.innerHTML =
+"방 번호 : " + room;
+
+}
+
+
+// 방장 여부
+
+if(!isHost){
+
+const btn =
+document.getElementById(
+"createLadderBtn"
+);
+
+
+if(btn){
+
+btn.style.display="none";
+
+}
+
+}
+
+
+// 이미 참가한 경우
+
 if(joinedRoom === room){
-document
-.getElementById("nickname")
-.style.display="none";
 
-document
-.getElementById("joinBtn")
-.style.display="none";
 
-document
-.getElementById("joinStatus")
-.innerHTML =
+const nickname =
+document.getElementById(
+"nickname"
+);
+
+
+const joinBtn =
+document.getElementById(
+"joinBtn"
+);
+
+
+if(nickname){
+
+nickname.style.display="none";
+
+}
+
+
+if(joinBtn){
+
+joinBtn.style.display="none";
+
+}
+
+
+const status =
+document.getElementById(
+"joinStatus"
+);
+
+
+if(status){
+
+status.innerHTML =
 "✅ 참가 완료 : "
 + myNickname;
+
+}
 
 
 }
