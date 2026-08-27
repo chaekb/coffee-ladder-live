@@ -1,3 +1,25 @@
+import {db}
+
+from "./firebase.js";
+
+
+import {
+
+ref,
+
+set,
+
+push,
+
+onValue
+
+}
+
+from
+
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
 
 const params =
 new URLSearchParams(location.search);
@@ -7,13 +29,21 @@ const room =
 params.get("room");
 
 
-document.getElementById("roomNumber")
+
+document
+.getElementById("roomNumber")
 .innerHTML =
 "방 번호 : " + room;
 
 
 
-let users=[];
+const usersRef =
+ref(
+db,
+"rooms/"
++ room
++ "/users"
+);
 
 
 
@@ -21,7 +51,9 @@ function join(){
 
 
 const name =
-document.getElementById("nickname").value;
+document
+.getElementById("nickname")
+.value;
 
 
 
@@ -35,35 +67,19 @@ return;
 
 
 
-users.push(name);
-
-
-render();
-
-
-}
+const userRef =
+push(usersRef);
 
 
 
-function render(){
+set(
+userRef,
+{
 
+name:name,
 
-const area =
-document.getElementById("users");
-
-
-area.innerHTML="";
-
-
-users.forEach(
-u=>{
-
-area.innerHTML +=
-`
-<p>
-☕ ${u}
-</p>
-`
+time:
+Date.now()
 
 }
 
@@ -71,3 +87,51 @@ area.innerHTML +=
 
 
 }
+
+
+
+window.join=join;
+
+
+
+
+onValue(
+usersRef,
+
+(snapshot)=>{
+
+
+const area =
+document
+.getElementById("users");
+
+
+area.innerHTML="";
+
+
+
+snapshot.forEach(
+(item)=>{
+
+
+const user =
+item.val();
+
+
+
+area.innerHTML +=
+
+`
+
+<p>
+☕ ${user.name}
+</p>
+
+`;
+
+
+
+});
+
+
+});
