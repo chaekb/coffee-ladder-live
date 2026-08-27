@@ -126,7 +126,13 @@ area.innerHTML +=
 `
 
 <p>
+
+<button onclick="startGame('${item.key}')">
+
 ☕ ${user.name}
+
+</button>
+
 </p>
 
 `;
@@ -475,5 +481,104 @@ ctx.stroke();
 
 });
 
+
+}
+
+
+function startGame(userKey){
+
+
+const userIndex =
+Object.keys(window.currentUsers)
+.indexOf(userKey);
+
+
+
+animateLadder(
+userIndex
+);
+
+
+}
+
+
+window.startGame=startGame;
+
+
+function getPath(
+start,
+bridges
+){
+
+
+let pos=start;
+
+let path=[];
+
+
+for(let r=0;r<5;r++){
+
+
+path.push(pos);
+
+
+
+bridges
+.filter(
+b=>b.row===r
+)
+.forEach(
+b=>{
+
+
+if(b.from===pos){
+
+pos=b.to;
+
+}
+else if(b.to===pos){
+
+pos=b.from;
+
+}
+
+
+});
+
+
+}
+
+
+path.push(pos);
+
+
+return path;
+
+}
+
+function animateLadder(start){
+
+
+const path =
+getPath(
+start,
+window.currentLadder
+);
+
+
+console.log(
+"path",
+path
+);
+
+
+document
+.getElementById("resultArea")
+.innerHTML=
+
+`
+이동 경로:
+${path.join(" → ")}
+`;
 
 }
