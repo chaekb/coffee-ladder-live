@@ -1,27 +1,24 @@
 function createRoom(){
 
     const room =
-Math.floor(
-Math.random()*10
-).toString();
+    Math.floor(Math.random() * 10).toString();
 
 
     const host =
-Date.now().toString();
+    Date.now().toString();
 
 
-sessionStorage.setItem(
-"host",
-host
-);
+    sessionStorage.setItem(
+        "host",
+        host
+    );
 
 
-location.href =
-"room.html?room="
-+room
-+"&host="
-+host;
-
+    location.href =
+        "room.html?room="
+        + room
+        + "&host="
+        + host;
 
 }
 
@@ -36,11 +33,13 @@ function joinRoom(){
     if(room){
 
         location.href =
-        "room.html?room=" + room;
+            "room.html?room="
+            + room;
 
     }
 
 }
+
 
 
 window.createRoom = createRoom;
