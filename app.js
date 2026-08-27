@@ -1,26 +1,27 @@
 function createRoom(){
 
     const room =
-    Math.floor(
-        100000 + Math.random()*900000
-    );
+Math.floor(
+Math.random()*10
+).toString();
 
 
     const host =
-    Date.now().toString();
+Date.now().toString();
 
 
-    sessionStorage.setItem(
-        "host",
-        host
-    );
+sessionStorage.setItem(
+"host",
+host
+);
 
 
-    location.href =
-    "room.html?room="
-    + room
-    + "&host="
-    + host;
+location.href =
+"room.html?room="
++room
++"&host="
++host;
+
 
 }
 
