@@ -22,13 +22,13 @@ from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
-
 const params =
 new URLSearchParams(location.search);
 
 
 const room =
 params.get("room");
+
 
 const host =
 params.get("host");
@@ -56,7 +56,6 @@ document
 
 }
 
-}
 
 
 const usersRef =
