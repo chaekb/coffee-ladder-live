@@ -1,13 +1,16 @@
 function createRoom(){
 
     const room =
-    Math.floor(100000 + Math.random()*900000);
+    Math.floor(
+        100000 + Math.random()*900000
+    );
 
 
     location.href =
     "room.html?room=" + room;
 
 }
+
 
 
 function joinRoom(){
@@ -24,3 +27,7 @@ function joinRoom(){
     }
 
 }
+
+
+window.createRoom = createRoom;
+window.joinRoom = joinRoom;
