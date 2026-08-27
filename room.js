@@ -37,25 +37,29 @@ const myHost =
 sessionStorage.getItem("host");
 
 
+
 const isHost =
 host === myHost;
 
-document
+window.onload=function(){
+
+  document
 .getElementById("roomNumber")
 .innerHTML =
 "방 번호 : " + room;
 
+if(!isHost){
 
-  if(!isHost){
-
-document
-.getElementById(
+const btn =
+document.getElementById(
 "createLadderBtn"
-)
-.style.display="none";
+);
 
+if(btn){
+btn.style.display="none";
 }
-
+}
+};
 
 
 const usersRef =
@@ -507,7 +511,6 @@ ctx.stroke();
 
 
 }
-
 
 function startGame(userKey){
 
