@@ -91,7 +91,6 @@ db,
 );
 
 
-
 function join(){
 
 
@@ -99,7 +98,6 @@ const name =
 document
 .getElementById("nickname")
 .value;
-
 
 
 if(!name){
@@ -116,7 +114,6 @@ const userRef =
 push(usersRef);
 
 
-
 set(
 userRef,
 {
@@ -129,6 +126,30 @@ Date.now()
 }
 
 );
+
+
+// 참가 완료 표시
+
+sessionStorage.setItem(
+"joined",
+"true"
+);
+
+
+document
+.getElementById("nickname")
+.style.display="none";
+
+
+document
+.getElementById("joinBtn")
+.style.display="none";
+
+
+document
+.getElementById("joinStatus")
+.innerHTML =
+"✅ 참가 완료 : " + name;
 
 
 }
