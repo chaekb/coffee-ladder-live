@@ -315,3 +315,149 @@ results.push(pos);
 return results;
 
 }
+
+
+const ladderRef =
+ref(
+db,
+"rooms/"
++room+
+"/ladder"
+);
+
+
+
+onValue(
+ladderRef,
+
+(snapshot)=>{
+
+
+const data =
+snapshot.val();
+
+
+
+if(data){
+
+
+drawLadder(
+data.ladder,
+data.users.length
+);
+
+
+}
+
+});
+
+
+function drawLadder(
+bridges,
+count
+){
+
+
+const canvas =
+document.getElementById(
+"ladderCanvas"
+);
+
+
+const ctx =
+canvas.getContext("2d");
+
+
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+
+
+const startX=50;
+
+const gap=100;
+
+
+const top=50;
+
+const bottom=450;
+
+
+
+// 세로줄
+
+for(
+let i=0;
+i<count;
+i++
+){
+
+let x=
+startX+i*gap;
+
+
+ctx.beginPath();
+
+ctx.moveTo(
+x,
+top
+);
+
+ctx.lineTo(
+x,
+bottom
+);
+
+ctx.stroke();
+
+}
+
+
+
+// 가로줄
+
+bridges.forEach(
+b=>{
+
+
+let y =
+top+
+(b.row+1)*70;
+
+
+let x1 =
+startX+
+b.from*gap;
+
+
+let x2 =
+startX+
+b.to*gap;
+
+
+
+ctx.beginPath();
+
+ctx.moveTo(
+x1,
+y
+);
+
+ctx.lineTo(
+x2,
+y
+);
+
+ctx.stroke();
+
+
+
+});
+
+
+}
