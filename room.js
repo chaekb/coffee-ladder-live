@@ -44,6 +44,15 @@ document
 .innerHTML =
 "방 번호 : " + room;
 
+if(!isHost){
+
+document
+.getElementById(
+"createLadderBtn"
+)
+.style.display="none";
+
+}
 
 
 const usersRef =
