@@ -42,6 +42,14 @@ const isHost =
 host &&
 host === myHost;
 
+const joinedRoom =
+sessionStorage.getItem("joinedRoom");
+
+
+const myNickname =
+sessionStorage.getItem("nickname");
+
+
 if(
 sessionStorage.getItem("joined")
 ==="true"
@@ -152,11 +160,16 @@ Date.now()
 );
 
 
-// 참가 완료 표시
+// 참가 정보 저장
+sessionStorage.setItem(
+"joinedRoom",
+room
+);
+
 
 sessionStorage.setItem(
-"joined",
-"true"
+"nickname",
+name
 );
 
 
@@ -174,15 +187,34 @@ document
 .getElementById("joinStatus")
 .innerHTML =
 "✅ 참가 완료 : " + name;
+}
+
+window.join=join;
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+if(joinedRoom === room){
+document
+.getElementById("nickname")
+.style.display="none";
+
+document
+.getElementById("joinBtn")
+.style.display="none";
+
+document
+.getElementById("joinStatus")
+.innerHTML =
+"✅ 참가 완료 : "
++ myNickname;
 
 
 }
 
 
-
-window.join=join;
-
-
+});
 
 
 onValue(
