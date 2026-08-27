@@ -6,8 +6,21 @@ function createRoom(){
     );
 
 
+    const host =
+    Date.now().toString();
+
+
+    sessionStorage.setItem(
+        "host",
+        host
+    );
+
+
     location.href =
-    "room.html?room=" + room;
+    "room.html?room="
+    + room
+    + "&host="
+    + host;
 
 }
 
