@@ -337,13 +337,18 @@ const data =
 snapshot.val();
 
 
+  console.log(
+"ladder data:",
+data
+);
+
 
 if(data){
 
 
 drawLadder(
 data.ladder,
-data.users.length
+Object.keys(data.users).length
 );
 
 
@@ -362,6 +367,15 @@ const canvas =
 document.getElementById(
 "ladderCanvas"
 );
+
+  if(!canvas){
+
+console.log("Canvas 없음");
+
+return;
+
+}
+
 
 
 const ctx =
