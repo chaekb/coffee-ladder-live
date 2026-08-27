@@ -150,7 +150,7 @@ area.innerHTML +=
 
 <p>
 
-<button onclick="startGame('${item.key}')">
+<button onclick="startGame('${user.name}')">
 
 ☕ ${user.name}
 
