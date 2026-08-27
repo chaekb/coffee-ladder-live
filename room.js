@@ -265,3 +265,53 @@ c++;
 return bridges;
 
 }
+
+
+function calculateResult(
+count,
+bridges
+){
+
+
+let results=[];
+
+
+for(let i=0;i<count;i++){
+
+
+let pos=i;
+
+
+for(let r=0;r<5;r++){
+
+
+bridges
+.filter(
+b=>b.row===r
+)
+.forEach(
+b=>{
+
+
+if(b.from===pos)
+pos=b.to;
+
+
+else if(b.to===pos)
+pos=b.from;
+
+
+});
+
+
+}
+
+
+results.push(pos);
+
+}
+
+
+return results;
+
+}
