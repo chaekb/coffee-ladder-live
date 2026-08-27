@@ -42,6 +42,30 @@ const isHost =
 host &&
 host === myHost;
 
+if(
+sessionStorage.getItem("joined")
+==="true"
+){
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+
+document
+.getElementById("nickname")
+.style.display="none";
+
+
+document
+.getElementById("joinBtn")
+.style.display="none";
+
+
+});
+
+}
+
 document.addEventListener(
 "DOMContentLoaded",
 ()=>{
