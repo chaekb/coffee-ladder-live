@@ -33,24 +33,28 @@ params.get("room");
 const host =
 params.get("host");
 
+const myHost =
+sessionStorage.getItem("host");
+
 
 const isHost =
-sessionStorage.getItem("host")
-=== host;
-
+host === myHost;
 
 document
 .getElementById("roomNumber")
 .innerHTML =
 "방 번호 : " + room;
 
-if(!isHost){
+
+  if(!isHost){
 
 document
 .getElementById(
 "createLadderBtn"
 )
 .style.display="none";
+
+}
 
 }
 
