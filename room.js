@@ -345,6 +345,8 @@ data
 
 if(data){
 
+  window.currentLadder = data.ladder;
+window.currentUsers = data.users;
 
 drawLadder(
 data.ladder,
