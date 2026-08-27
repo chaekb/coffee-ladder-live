@@ -18,19 +18,19 @@ const firebaseConfig = {
 
 
 apiKey:
-"여기에 Firebase 값 입력",
+"AIzaSyC7wrf_nfAoGtXX8dWQxkMzArXU2jDnmoc",
 
 
 authDomain:
-"여기에 입력",
+"coffee-ladder-live.firebaseapp.com",
 
 
 databaseURL:
-"여기에 입력",
+"https://coffee-ladder-live-default-rtdb.asia-southeast1.firebasedatabase.app",
 
 
 projectId:
-"여기에 입력"
+"coffee-ladder-live"
 
 };
 
