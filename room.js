@@ -137,3 +137,131 @@ area.innerHTML +=
 
 
 });
+
+
+async function createLadder(){
+
+
+const usersSnapshot =
+await get(usersRef);
+
+
+const users=[];
+
+
+usersSnapshot.forEach(
+(item)=>{
+
+users.push(item.val().name);
+
+});
+
+
+if(users.length < 2){
+
+alert("참가자가 부족합니다.");
+
+return;
+
+}
+
+
+
+const ladder =
+generateLadder(users.length);
+
+
+
+const result =
+calculateResult(
+users.length,
+ladder
+);
+
+
+
+const ladderRef =
+ref(
+db,
+"rooms/"
++room+
+"/ladder"
+);
+
+
+
+await set(
+ladderRef,
+{
+
+users:users,
+
+ladder:ladder,
+
+result:result,
+
+created:
+Date.now()
+
+}
+
+);
+
+
+
+document
+.getElementById("ladderStatus")
+.innerHTML=
+"🎲 사다리 생성 완료";
+
+
+}
+
+
+
+window.createLadder=createLadder;
+
+
+function generateLadder(count){
+
+
+const rows=5;
+
+
+let bridges=[];
+
+
+
+for(let r=0;r<rows;r++){
+
+
+for(let c=0;c<count-1;c++){
+
+
+if(Math.random()<0.4){
+
+
+bridges.push({
+
+row:r,
+
+from:c,
+
+to:c+1
+
+});
+
+
+c++;
+
+}
+
+
+}
+
+}
+
+
+return bridges;
+
+}
