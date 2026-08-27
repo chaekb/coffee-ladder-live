@@ -39,14 +39,28 @@ sessionStorage.getItem("host");
 
 
 const isHost =
+host &&
 host === myHost;
 
-window.onload=function(){
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
 
-  document
-.getElementById("roomNumber")
-.innerHTML =
+
+const roomNumber =
+document.getElementById(
+"roomNumber"
+);
+
+
+if(roomNumber){
+
+roomNumber.innerHTML =
 "방 번호 : " + room;
+
+}
+
+
 
 if(!isHost){
 
@@ -55,11 +69,17 @@ document.getElementById(
 "createLadderBtn"
 );
 
+
 if(btn){
+
 btn.style.display="none";
+
 }
+
 }
-};
+
+
+});
 
 
 const usersRef =
