@@ -227,7 +227,10 @@ ladder:ladder,
 result:result,
 
 created:
-Date.now()
+Date.now(),
+
+expireAt:
+Date.now()+300000
 
 }
 
@@ -373,6 +376,8 @@ if(data){
 
   window.currentLadder = data.ladder;
 window.currentUsers = data.users;
+  window.expireAt =
+data.expireAt;
 
 drawLadder(
 data.ladder,
@@ -507,10 +512,12 @@ ctx.stroke();
 
 function startGame(userKey){
 
+const keys =
+Object.keys(window.currentUsers);
+
 
 const userIndex =
-Object.keys(window.currentUsers)
-.indexOf(userKey);
+keys.indexOf(userKey);
 
 
 
@@ -524,52 +531,72 @@ userIndex
 
 window.startGame=startGame;
 
+setInterval(()=>{
+
+
+if(
+window.expireAt &&
+Date.now() > window.expireAt
+){
+
+alert(
+"방이 종료되었습니다."
+);
+
+
+location.href="index.html";
+
+}
+
+
+},1000);
 
 function getPath(
 start,
 bridges
 ){
 
-
 let pos=start;
 
-let path=[];
+let path=[
+pos
+];
 
 
-for(let r=0;r<5;r++){
+for(let r=0;r<=5;r++){
 
 
-path.push(pos);
-
-
-
-bridges
-.filter(
-b=>b.row===r
+const bridge =
+bridges.find(
+b=>b.row===r &&
+(
+b.from===pos ||
+b.to===pos
 )
-.forEach(
-b=>{
+);
 
 
-if(b.from===pos){
 
-pos=b.to;
+if(bridge){
 
-}
-else if(b.to===pos){
+if(bridge.from===pos){
 
-pos=b.from;
+pos=bridge.to;
 
 }
+else{
 
+pos=bridge.from;
 
-});
-
+}
 
 }
 
 
 path.push(pos);
+
+
+}
 
 
 return path;
