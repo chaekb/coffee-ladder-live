@@ -14,10 +14,11 @@
         <!-- 1단계: 방 생성 / 입장 -->
         <div id="lobby-zone" class="card">
             <button id="btn-create-room">새로운 게임방 만들기</button>
-            <p id="room-link-container" class="hidden">
-                공유 링크: <input type="text" id="room-link" readonly>
+            <div id="room-link-container" class="hidden" style="margin-top: 15px;">
+                <p style="font-weight: bold; margin-bottom: 5px;">공유 링크가 생성되었습니다!</p>
+                <input type="text" id="room-link" readonly style="padding: 10px; width: 70%; text-align: center;">
                 <button id="btn-copy">복사</button>
-            </p>
+            </div>
         </div>
 
         <!-- 2단계: 닉네임 입력 (방 입장 후) -->
