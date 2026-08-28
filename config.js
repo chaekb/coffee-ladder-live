@@ -1,4 +1,4 @@
-// TODO: º»ÀÎÀÇ Firebase ÇÁ·ÎÁ§Æ® ¼³Á¤°ªÀ¸·Î ´ëÃ¼ÇÏ¼¼¿ä
+// TODO: ë³¸ì¸ì˜ Firebase í”„ë¡œì íŠ¸ ì„¤ì •ê°’ìœ¼ë¡œ ëŒ€ì²´í•˜ì„¸ìš”
 const firebaseConfig = {
   apiKey: "AIzaSyC7wrf_nfAoGtXX8dWQxkMzArXU2jDnmoc",
   authDomain: "coffee-ladder-live.firebaseapp.com",
@@ -6,7 +6,7 @@ const firebaseConfig = {
   databaseURL: "https://coffee-ladder-live-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
-// Firebase ÃÊ±âÈ­ ¹× ¸ğµâ ³»º¸³»±â¿ë Àü¿ª º¯¼ö
+// Firebase ì´ˆê¸°í™” ë° ëª¨ë“ˆ ë‚´ë³´ë‚´ê¸°ìš© ì „ì—­ ë³€ìˆ˜ (www ê³ ì • ì£¼ì†Œë¡œ ìˆ˜ì • ì™„ë£Œ)
 import { initializeApp } from "https://gstatic.com";
 import { getDatabase, ref, set, get, child, onValue, update, remove } from "https://gstatic.com";
 
