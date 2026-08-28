@@ -1,7 +1,6 @@
 body {
 
     margin:0;
-    height:100vh;
 
     display:flex;
     justify-content:center;
@@ -12,6 +11,9 @@ body {
     font-family:
     Arial,
     sans-serif;
+    padding:20px;
+
+    min-height:100vh;
 
 }
 
