@@ -3,24 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="style.css">
-<title>참가자 화면</title>
 </head>
 <body>
-<div class="container">
-<h1>☕ 참가자</h1>
-<div class="card">
-<h2 id="roomNumber"></h2>
-<div id="users"></div>
-<div id="resultArea"></div>
-</div>
-</div>
-<script type="module" src="./guest-room.js"></script>
-
-<!-- 참가자 목록을 띄우거나 대기 상태를 적을 공간 -->
-<ul id="participantList"></ul>
+<h2 id="roomNumber">방 번호 : </h2>
 <p id="statusMessage"></p>
+<canvas id="ladderCanvas" width="500" height="550"></canvas>
+<script type="module" src="guest-room.js"></script>
 
-<!-- 사다리가 그려질 공간 -->
-<canvas id="ladderCanvas" width="500" height="600"></canvas>
 </body>
 </html>
