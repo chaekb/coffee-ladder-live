@@ -1,6 +1,6 @@
 // Firebase 초기화 및 모듈 내보내기용 전역 변수 (www 고정 주소로 수정 완료)
 import { initializeApp } from "https://gstatic.com";
-import { getDatabase, ref, set, get, child, onValue, update, remove } from "https://gstatic.com";
+import { getFirestore } from "https://gstatic.com";
 
 
 // TODO: 본인의 Firebase 프로젝트 설정값으로 대체하세요
@@ -16,8 +16,5 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-export { db, ref, set, get, child, onValue, update, remove };
-
+export const db = getFirestore(app);
 
