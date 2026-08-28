@@ -3,9 +3,9 @@ import { db, ref, set, get, child, onValue, update, remove } from './config.js';
 let roomId = null;
 let myName = null;
 let isHost = false;
-const EXPIRE_TIME = 10 * 60 * 1000; // 10ºĞ (¹Ğ¸®ÃÊ)
+const EXPIRE_TIME = 10 * 60 * 1000; // 10ë¶„ (ë°€ë¦¬ì´ˆ)
 
-// DOM ¿ä¼Òµé
+// DOM ìš”ì†Œë“¤
 const lobbyZone = document.getElementById('lobby-zone');
 const joinZone = document.getElementById('join-zone');
 const gameZone = document.getElementById('game-zone');
@@ -20,14 +20,14 @@ const btnStartGame = document.getElementById('btn-start-game');
 const canvas = document.getElementById('ladder-canvas');
 const ctx = canvas.getContext('2d');
 
-// ÆË¾÷ ¿ä¼Òµé
+// íŒì—… ìš”ì†Œë“¤
 const resultOverlay = document.getElementById('result-overlay');
 const resultEmoji = document.getElementById('result-emoji');
 const resultMessage = document.getElementById('result-message');
 const resultSub = document.getElementById('result-sub');
 const btnClosePopup = document.getElementById('btn-close-popup');
 
-// ÆäÀÌÁö ·Îµå ½Ã URL¿¡¼­ ¹æ ID È®ÀÎ
+// í˜ì´ì§€ ë¡œë“œ ì‹œ URLì—ì„œ ë°© ID í™•ì¸
 window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const rId = urlParams.get('room');
@@ -37,30 +37,30 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// 10ºĞ ¸¸·á Ã¼Å© ÇÔ¼ö
+// 10ë¶„ ë§Œë£Œ ì²´í¬ í•¨ìˆ˜
 async function checkRoomValidity() {
     const snapshot = await get(child(ref(db), `rooms/${roomId}`));
     if (snapshot.exists()) {
         const roomData = snapshot.val();
         const now = Date.now();
-        // 10ºĞÀÌ Áö³µ´Ù¸é µğºñ¿¡¼­ Áö¿ì°í ÆøÆÄ
+        // 10ë¶„ì´ ì§€ë‚¬ë‹¤ë©´ ë””ë¹„ì—ì„œ ì§€ìš°ê³  í­íŒŒ
         if (now - roomData.createdAt > EXPIRE_TIME) {
-            alert('»ı¼ºµÈ Áö 10ºĞÀÌ Áö³ª ÆøÆÄµÈ ¹æÀÔ´Ï´Ù.');
+            alert('ìƒì„±ëœ ì§€ 10ë¶„ì´ ì§€ë‚˜ í­íŒŒëœ ë°©ì…ë‹ˆë‹¤.');
             await remove(ref(db), `rooms/${roomId}`);
             window.location.href = window.location.origin + window.location.pathname;
         } else {
-            // Á¤»óÀûÀÎ ¹æÀÌ¶ó¸é ´Ğ³×ÀÓ ÀÔ·ÂÃ¢ ¶ç¿ì±â
+            // ì •ìƒì ì¸ ë°©ì´ë¼ë©´ ë‹‰ë„¤ì„ ì…ë ¥ì°½ ë„ìš°ê¸°
             lobbyZone.classList.add('hidden');
             joinZone.classList.remove('hidden');
             listenRoomData();
         }
     } else {
-        alert('Á¸ÀçÇÏÁö ¾Ê´Â ¹æÀÔ´Ï´Ù.');
+        alert('ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ë°©ì…ë‹ˆë‹¤.');
         window.location.href = window.location.origin + window.location.pathname;
     }
 }
 
-// ¹æ ¸¸µé±â Å¬¸¯
+// ë°© ë§Œë“¤ê¸° í´ë¦­
 btnCreateRoom.addEventListener('click', async () => {
     roomId = Math.random().toString(36).substring(2, 8);
     isHost = true;
@@ -82,51 +82,51 @@ btnCreateRoom.addEventListener('click', async () => {
     listenRoomData();
 });
 
-// ¸µÅ© º¹»ç ¹öÆ°
+// ë§í¬ ë³µì‚¬ ë²„íŠ¼
 btnCopy.addEventListener('click', () => {
     roomLink.select();
     document.execCommand('copy');
-    alert('¸µÅ©°¡ º¹»çµÇ¾ú½À´Ï´Ù! Ä«Åå¹æ¿¡ °øÀ¯ÇÏ¼¼¿ä.');
+    alert('ë§í¬ê°€ ë³µì‚¬ë˜ì—ˆìŠµë‹ˆë‹¤! ì¹´í†¡ë°©ì— ê³µìœ í•˜ì„¸ìš”.');
 });
 
-// Âü°¡ÇÏ±â ¹öÆ° Å¬¸¯
+// ì°¸ê°€í•˜ê¸° ë²„íŠ¼ í´ë¦­
 btnJoin.addEventListener('click', async () => {
     const name = userNameInput.value.trim();
-    if (!name) return alert('´Ğ³×ÀÓÀ» ÀÔ·ÂÇÏ¼¼¿ä!');
+    if (!name) return alert('ë‹‰ë„¤ì„ì„ ì…ë ¥í•˜ì„¸ìš”!');
     myName = name;
 
-    // Âü°¡ÀÚ µî·Ï
+    // ì°¸ê°€ì ë“±ë¡
     await set(ref(db, `rooms/${roomId}/players/${myName}`), {
         joinedAt: Date.now()
     });
 
     joinZone.classList.add('hidden');
     gameZone.classList.remove('hidden');
-    document.getElementById('room-title').innerText = `¹æ ID: ${roomId}`;
+    document.getElementById('room-title').innerText = `ë°© ID: ${roomId}`;
 
     if (isHost) {
         btnStartGame.classList.remove('hidden');
     }
 });
 
-// µ¥ÀÌÅÍ ½Ç½Ã°£ °¨½Ã ¹× ·»´õ¸µ µ¿±âÈ­
+// ë°ì´í„° ì‹¤ì‹œê°„ ê°ì‹œ ë° ë Œë”ë§ ë™ê¸°í™”
 function listenRoomData() {
     onValue(ref(db, `rooms/${roomId}`), (snapshot) => {
         const data = snapshot.val();
         if (!data) return;
 
-        // 1. Âü¿©ÀÚ ¸í´Ü ¾÷µ¥ÀÌÆ®
+        // 1. ì°¸ì—¬ì ëª…ë‹¨ ì—…ë°ì´íŠ¸
         if (data.players) {
             const playerNames = Object.keys(data.players);
-            participantList.innerText = `Âü°¡ÀÚ (${playerNames.length}¸í): ${playerNames.join(', ')}`;
+            participantList.innerText = `ì°¸ê°€ì (${playerNames.length}ëª…): ${playerNames.join(', ')}`;
             
-            // ½Ç½Ã°£ ´ë±â »óÅÂÀÏ ¶§ Äµ¹ö½º ±âº»¼± ±×·ÁµÎ±â
+            // ì‹¤ì‹œê°„ ëŒ€ê¸° ìƒíƒœì¼ ë•Œ ìº”ë²„ìŠ¤ ê¸°ë³¸ì„  ê·¸ë ¤ë‘ê¸°
             if (data.status === 'waiting') {
                 drawBaseLines(playerNames);
             }
         }
 
-        // 2. ´©±º°¡ °ÔÀÓÀ» ½ÃÀÛÇßÀ» ¶§ ¾Ö´Ï¸ŞÀÌ¼Ç Ã³¸®
+        // 2. ëˆ„êµ°ê°€ ê²Œì„ì„ ì‹œì‘í–ˆì„ ë•Œ ì• ë‹ˆë©”ì´ì…˜ ì²˜ë¦¬
         if (data.status === 'playing' && data.ladderStructure) {
             const players = Object.keys(data.players);
             const structure = JSON.parse(data.ladderStructure);
@@ -135,7 +135,7 @@ function listenRoomData() {
     });
 }
 
-// ±âº» ±âµÕ ±×¸®±â
+// ê¸°ë³¸ ê¸°ë‘¥ ê·¸ë¦¬ê¸°
 function drawBaseLines(players) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (players.length < 2) return;
@@ -145,39 +145,39 @@ function drawBaseLines(players) {
 
     ctx.strokeStyle = '#6f4e37';
     ctx.lineWidth = 4;
-    ctx.font = '14px Arial';
+    ctx.font = 'bold 14px Arial';
     ctx.fillStyle = '#333';
     ctx.textAlign = 'center';
 
     for (let i = 0; i < count; i++) {
         const x = spacing * (i + 1);
-        // ¼¼·Î¼±
+        // ì„¸ë¡œì„ 
         ctx.beginPath();
         ctx.moveTo(x, 40);
         ctx.lineTo(x, canvas.height - 40);
         ctx.stroke();
-        // ÀÌ¸§ Ç¥½Ã
+        // ì´ë¦„ í‘œì‹œ
         ctx.fillText(players[i], x, 25);
     }
 }
 
-// È£½ºÆ®°¡ ½ÃÀÛ ´©¸§ (»ç´Ù¸® ¹«ÀÛÀ§ »ı¼º ÈÄ µğºñ ¾÷·Îµå)
+// í˜¸ìŠ¤íŠ¸ê°€ ì‹œì‘ ëˆ„ë¦„ (ì‚¬ë‹¤ë¦¬ ë¬´ì‘ìœ„ ìƒì„± í›„ ë””ë¹„ ì—…ë¡œë“œ)
 btnStartGame.addEventListener('click', async () => {
     const snapshot = await get(ref(db, `rooms/${roomId}`));
     const data = snapshot.val();
     const players = Object.keys(data.players);
 
-    if (players.length < 2) return alert('ÃÖ¼Ò 2¸í ÀÌ»ó ¸ğ¿©¾ß ½ÃÀÛÇÒ ¼ö ÀÖ½À´Ï´Ù.');
+    if (players.length < 2) return alert('ìµœì†Œ 2ëª… ì´ìƒ ëª¨ì—¬ì•¼ ì‹œì‘í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.');
 
-    // °¡·Î »ç´Ù¸® ´Ù¸® ³õ±â ¹«ÀÛÀ§ ¼³°è
+    // ê°€ë¡œ ì‚¬ë‹¤ë¦¬ ë‹¤ë¦¬ ë†“ê¸° ë¬´ì‘ìœ„ ì„¤ê³„
     const linesCount = players.length;
-    const steps = 6; // °¡·Î Ä­¼ö ³ª´©±â
+    const steps = 6; // ê°€ë¡œ ì¹¸ìˆ˜ ë‚˜ëˆ„ê¸°
     let structure = [];
 
     for (let s = 0; s < steps; s++) {
         let row = [];
         for (let l = 0; l < linesCount - 1; l++) {
-            // ¿¬¼ÓÇØ¼­ ´Ù¸®°¡ »ı±âÁö ¾Êµµ·Ï ¹æÁö È®·ü ¹İ¹İ
+            // ì—°ì†í•´ì„œ ë‹¤ë¦¬ê°€ ìƒê¸°ì§€ ì•Šë„ë¡ ë°©ì§€ í™•ë¥  ë°˜ë°˜
             if (l > 0 && row[l - 1] === 1) {
                 row.push(0);
             } else {
@@ -187,11 +187,11 @@ btnStartGame.addEventListener('click', async () => {
         structure.push(row);
     }
 
-    // ´çÃ·ÀÚ ¼±Á¤ (ÇÃ·¹ÀÌ¾î ÀÎµ¦½º Áß 1¸í)
+    // ë‹¹ì²¨ì ì„ ì • (í”Œë ˆì´ì–´ ì¸ë±ìŠ¤ ì¤‘ 1ëª…)
     const winnerIdx = Math.floor(Math.random() * players.length);
     const winnerName = players[winnerIdx];
 
-    // DB µ¥ÀÌÅÍ ¾÷µ¥ÀÌÆ® -> ½Ç½Ã°£À¸·Î Á¢¼ÓÇÑ ¸ğµÎ¿¡°Ô ½ÅÈ£°¡ °¨
+    // DB ë°ì´í„° ì—…ë°ì´íŠ¸ -> ì‹¤ì‹œê°„ìœ¼ë¡œ ì ‘ì†í•œ ëª¨ë‘ì—ê²Œ ì‹ í˜¸ê°€ ê°
     await update(ref(db, `rooms/${roomId}`), {
         status: 'playing',
         ladderStructure: JSON.stringify(structure),
@@ -199,9 +199,9 @@ btnStartGame.addEventListener('click', async () => {
     });
 });
 
-// ¸ğµç Å¬¶óÀÌ¾ğÆ®°¡ µ¿½Ã¿¡ ±¸µ¿ÇÒ »ç´Ù¸® ¾Ö´Ï¸ŞÀÌ¼Ç ÇÔ¼ö
+// ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ê°€ ë™ì‹œì— êµ¬ë™í•  ì‚¬ë‹¤ë¦¬ ì• ë‹ˆë©”ì´ì…˜ í•¨ìˆ˜
 function animateLadder(players, structure, winnerName) {
-    btnStartGame.classList.add('hidden'); // °ÔÀÓ µµÁß ½ÃÀÛ ¹öÆ° °¨Ãß±â
+    btnStartGame.classList.add('hidden'); // ê²Œì„ ë„ì¤‘ ì‹œì‘ ë²„íŠ¼ ê°ì¶”ê¸°
     const count = players.length;
     const spacing = canvas.width / (count + 1);
     const steps = structure.length;
@@ -215,7 +215,7 @@ function animateLadder(players, structure, winnerName) {
         ctx.strokeStyle = '#e74c3c';
         ctx.lineWidth = 3;
 
-        // °¡·Î »ç´Ù¸® ±¸Á¶ »À´ë ¸ÕÀú ±×¸®±â
+        // ê°€ë¡œ ì‚¬ë‹¤ë¦¬ êµ¬ì¡° ë¼ˆëŒ€ ë¨¼ì € ê·¸ë¦¬ê¸°
         ctx.strokeStyle = '#6f4e37';
         for (let s = 0; s < steps; s++) {
             const y = 40 + (s + 1) * stepHeight;
@@ -229,37 +229,35 @@ function animateLadder(players, structure, winnerName) {
             }
         }
 
-        // Æ¯Á¤ ÁøÇà ÁöÁ¡(currentProgress)±îÁö »¡°£»ö ÃßÀû¼± ¾Ö´Ï¸ŞÀÌ¼Ç ¿¬Ãâ È¿°ú ±¸Çö °¡´É
-        // º» »ùÇÃ¿¡¼­´Â ºü¸£°Ô ¿¬Ãâ ÈÄ ÆË¾÷À¸·Î ¿¬°èÇÕ´Ï´Ù.
         currentProgress += 1;
         if (currentProgress < 60) {
             requestAnimationFrame(drawFrame);
         } else {
-            // ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á ÈÄ °á°ú ÀÌ¸ğ¼Ç ÆË¾÷ Ç¥½Ã
+            // ì• ë‹ˆë©”ì´ì…˜ ì™„ë£Œ í›„ ê²°ê³¼ ì´ëª¨ì…˜ íŒì—… í‘œì‹œ
             showResultPopup(winnerName);
         }
     }
     drawFrame();
 }
 
-// °á°ú ÀÌ¸ğ¼Ç º¸¿©ÁÖ±â ÆË¾÷ Ã¢ ÇÔ¼ö
+// ê²°ê³¼ ì´ëª¨ì…˜ ë³´ì—¬ì£¼ê¸° íŒì—… ì°½ í•¨ìˆ˜
 function showResultPopup(winnerName) {
     resultOverlay.classList.remove('hidden');
     
     if (myName === winnerName) {
-        // ³»°¡ °É¸° °æ¿ì (¹úÄ¢ ÀÌ¸ğ¼Ç)
-        resultEmoji.innerText = '??????';
-        resultMessage.innerText = `¾Ç! ³»°¡ ´çÃ·!!`;
-        resultSub.innerText = `¿À´Ã Ä¿ÇÇ´Â ${myName}´ÔÀÌ ½õ´Ï´Ù! ¿µ¼öÁõ Ã¬±â¼¼¿ä..`;
+        // ë‚´ê°€ ê±¸ë¦° ê²½ìš° (ë²Œì¹™ ì´ëª¨ì…˜)
+        resultEmoji.innerText = 'ğŸ˜­ğŸ’¸ğŸ˜±';
+        resultMessage.innerText = `ì•…! ë‚´ê°€ ë‹¹ì²¨!!`;
+        resultSub.innerText = `ì˜¤ëŠ˜ ì»¤í”¼ëŠ” ${myName}ë‹˜ì´ ì©ë‹ˆë‹¤! ì˜ìˆ˜ì¦ ì±™ê¸°ì„¸ìš”..`;
     } else {
-        // »ì¾Æ³²Àº °æ¿ì (±â»İ°ú ¾ÈµµÀÇ ÀÌ¸ğ¼Ç)
-        resultEmoji.innerText = '??????';
-        resultMessage.innerText = `ÈŞ.. »ì¾Ò´Ù!`;
-        resultSub.innerText = `´çÃ·ÀÚ´Â [ ${winnerName} ] ÀÔ´Ï´Ù. Àß ¸¶½Ç°Ô¿ä!`;
+        // ì‚´ì•„ë‚¨ì€ ê²½ìš° (ê¸°ì¨ê³¼ ì•ˆë„ì˜ ì´ëª¨ì…˜)
+        resultEmoji.innerText = 'ğŸ‰ğŸ˜ğŸ˜Œ';
+        resultMessage.innerText = `íœ´.. ì‚´ì•˜ë‹¤!`;
+        resultSub.innerText = `ë‹¹ì²¨ìëŠ” [ ${winnerName} ] ì…ë‹ˆë‹¤. ì˜ ë§ˆì‹¤ê²Œìš”!`;
     }
 }
 
-// ÆË¾÷ ´İ±â
+// íŒì—… ë‹«ê¸°
 btnClosePopup.addEventListener('click', () => {
     resultOverlay.classList.add('hidden');
 });
