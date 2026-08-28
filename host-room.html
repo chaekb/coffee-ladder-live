@@ -3,28 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="style.css">
-<title>방장 화면</title>
 </head>
 <body>
-<div class="container">
-<h1>☕ 커피 사다리</h1>
-<div class="card">
-<h2 id="roomNumber"></h2>
-<h3>참가자</h3>
-<div id="users"></div>
-<button class="button" id="createLadderBtn">🎲 사다리 생성</button>
-<p id="ladderStatus"></p>
-<canvas id="ladderCanvas" width="500" height="400"></canvas>
-<div id="resultArea"></div>
-</div>
-</div>
-<script type="module" src="./host-room.js"></script>
-
-<!-- 참가자 목록을 띄우거나 대기 상태를 적을 공간 -->
+<h2 id="roomNumber">방 번호 : </h2>
+<button class="button" onclick="generateLadder()">🎲 사다리 생성</button>
+<h3>현재 참가자 목록</h3>
 <ul id="participantList"></ul>
-<p id="statusMessage"></p>
-
-<!-- 사다리가 그려질 공간 -->
-<canvas id="ladderCanvas" width="500" height="600"></canvas>
+<canvas id="ladderCanvas" width="500" height="550"></canvas>
+<script type="module" src="host-room.js"></script>
 </body>
 </html>
