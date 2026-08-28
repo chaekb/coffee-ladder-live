@@ -2,52 +2,53 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>½Ç½Ã°£ Ä¿ÇÇ³»±â »ç´Ù¸®Å¸±â</title>
+    <title>ì‹¤ì‹œê°„ ì»¤í”¼ë‚´ê¸° ì‚¬ë‹¤ë¦¬íƒ€ê¸°</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>? ½Ç½Ã°£ Ä¿ÇÇ »ç´Ù¸®</h1>
+        <h1>â˜• ì‹¤ì‹œê°„ ì»¤í”¼ ì‚¬ë‹¤ë¦¬</h1>
         
-        <!-- 1´Ü°è: ¹æ »ý¼º / ÀÔÀå -->
+        <!-- 1ë‹¨ê³„: ë°© ìƒì„± / ìž…ìž¥ -->
         <div id="lobby-zone" class="card">
-            <button id="btn-create-room">»õ·Î¿î °ÔÀÓ¹æ ¸¸µé±â</button>
+            <button id="btn-create-room">ìƒˆë¡œìš´ ê²Œìž„ë°© ë§Œë“¤ê¸°</button>
             <p id="room-link-container" class="hidden">
-                °øÀ¯ ¸µÅ©: <input type="text" id="room-link" readonly>
-                <button id="btn-copy">º¹»ç</button>
+                ê³µìœ  ë§í¬: <input type="text" id="room-link" readonly>
+                <button id="btn-copy">ë³µì‚¬</button>
             </p>
         </div>
 
-        <!-- 2´Ü°è: ´Ð³×ÀÓ ÀÔ·Â (¹æ ÀÔÀå ÈÄ) -->
+        <!-- 2ë‹¨ê³„: ë‹‰ë„¤ìž„ ìž…ë ¥ (ë°© ìž…ìž¥ í›„) -->
         <div id="join-zone" class="card hidden">
-            <input type="text" id="user-name" placeholder="´Ð³×ÀÓÀ» ÀÔ·ÂÇÏ¼¼¿ä" maxlength="8">
-            <button id="btn-join">Âü°¡ÇÏ±â</button>
+            <input type="text" id="user-name" placeholder="ë‹‰ë„¤ìž„ì„ ìž…ë ¥í•˜ì„¸ìš”" maxlength="8">
+            <button id="btn-join">ì°¸ê°€í•˜ê¸°</button>
         </div>
 
-        <!-- 3´Ü°è: ´ë±â½Ç ¹× »ç´Ù¸® °ÔÀÓÆÇ -->
+        <!-- 3ë‹¨ê³„: ëŒ€ê¸°ì‹¤ ë° ì‚¬ë‹¤ë¦¬ ê²Œìž„íŒ -->
         <div id="game-zone" class="card hidden">
             <h3 id="room-title"></h3>
-            <div id="participant-list">Âü°¡ÀÚ: ´ë±â Áß...</div>
+            <div id="participant-list">ì°¸ê°€ìž: ëŒ€ê¸° ì¤‘...</div>
             
             <div class="control-box">
-                <button id="btn-start-game" class="hidden">»ç´Ù¸® Å¸±â ½ÃÀÛ!</button>
+                <button id="btn-start-game" class="hidden">ì‚¬ë‹¤ë¦¬ íƒ€ê¸° ì‹œìž‘!</button>
             </div>
 
-            <!-- »ç´Ù¸®°¡ ±×·ÁÁú °ø°£ -->
+            <!-- ì‚¬ë‹¤ë¦¬ê°€ ê·¸ë ¤ì§ˆ ê³µê°„ -->
             <div class="canvas-container">
                 <canvas id="ladder-canvas" width="600" height="400"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- °á°ú ÀÌ¸ð¼Ç ÆË¾÷ ¿À¹ö·¹ÀÌ -->
+    <!-- ê²°ê³¼ ì´ëª¨ì…˜ íŒì—… ì˜¤ë²„ë ˆì´ -->
     <div id="result-overlay" class="overlay hidden">
         <div class="result-content">
-            <div id="result-emoji" class="emoji-animation">??</div>
-            <h2 id="result-message">´çÃ·ÀÚ ¹ßÇ¥</h2>
+            <div id="result-emoji" class="emoji-animation">ðŸ˜­</div>
+            <h2 id="result-message">ë‹¹ì²¨ìž ë°œí‘œ</h2>
             <p id="result-sub"></p>
-            <button id="btn-close-popup">È®ÀÎ</button>
+            <button id="btn-close-popup">í™•ì¸</button>
         </div>
     </div>
 
