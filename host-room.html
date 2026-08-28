@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="style.css">
+<title>방장 화면</title>
+</head>
+<body>
+<div class="container">
+<h1>☕ 커피 사다리</h1>
+<div class="card">
+<h2 id="roomNumber"></h2>
+<h3>참가자</h3>
+<div id="users"></div>
+<button class="button" id="createLadderBtn">🎲 사다리 생성</button>
+<p id="ladderStatus"></p>
+<canvas id="ladderCanvas" width="500" height="400"></canvas>
+<div id="resultArea"></div>
+</div>
+</div>
+<script type="module" src="./host-room.js"></script>
+</body>
+</html>
