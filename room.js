@@ -126,6 +126,11 @@ document
 .getElementById("joinStatus")
 .innerHTML =
 "✅ 참가 완료 : " + name;
+
+  window.scrollTo({
+top:0,
+behavior:"smooth"
+});
 }
 
 window.join=join;
