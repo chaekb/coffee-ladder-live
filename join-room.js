@@ -1,0 +1,6 @@
+import { db } from "./firebase.js";
+import { ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const roomInput=document.getElementById("room");const nicknameInput=document.getElementById("nickname");const joinBtn=document.getElementById("joinBtn");const errorMessage=document.getElementById("errorMessage");
+joinBtn.addEventListener("click",joinRoom);[roomInput,nicknameInput].forEach(el=>el.addEventListener("keydown",e=>{if(e.key==="Enter")joinRoom();}));
+async function joinRoom(){const room=roomInput.value.trim();const nickname=nicknameInput.value.trim();if(!/^[0-9]$/.test(room)){showError("방 번호는 0~9 중 한 자리 숫자입니다.");return;}if(!nickname){showError("이름을 입력해 주세요.");return;}joinBtn.disabled=true;try{const s=await get(ref(db,"rooms/"+room));if(!s.exists())throw new Error("존재하지 않는 방입니다.");const d=s.val();if(d.expireAt&&Date.now()>d.expireAt)throw new Error("이미 종료된 방입니다.");if(d.status&&d.status!=="waiting")throw new Error("이미 사다리가 생성된 방입니다.");sessionStorage.setItem("joinedRoom",room);sessionStorage.setItem("nickname",nickname);location.href="./guest-room.html?room="+encodeURIComponent(room)+"&nickname="+encodeURIComponent(nickname);}catch(err){console.error(err);showError(err.message||"참가 중 오류가 발생했습니다.");joinBtn.disabled=false;}}
+function showError(msg){errorMessage.textContent=msg;errorMessage.classList.remove("hidden");}
