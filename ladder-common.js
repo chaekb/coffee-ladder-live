@@ -122,7 +122,7 @@ export function animateLadder(canvas, bridges, users, startIndex, onComplete) {
   let segment = 0;
   let segmentStart = null;
   let finished = false;
-  const speed = 320; // px/sec
+  const speed = 450; // px/sec
 
   const segments = [];
   for (let row = 0; row < LADDER_ROWS; row++) {
