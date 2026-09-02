@@ -130,13 +130,21 @@ function showMyPath() {
     const winnerStartIndex = Array.isArray(l.results) ? l.results.findIndex(result => Number(result) === Number(l.winningIndex)) : -1;
     const winnerName = winnerStartIndex >= 0 ? l.users[winnerStartIndex] : "당첨자";
     resultArea.innerHTML = `<div class="result-card result-final ${isWinner ? "is-winner" : "is-safe"}"><div class="result-emoji">${emoji}</div><strong>${headline}</strong><small>다시 내 이름을 누르면 처음부터 다시 볼 수 있습니다.</small></div>`;
-    if (isWinner) showCelebration(winnerName);
+    showCelebration(winnerName, isWinner);
   });
 }
 
-function showCelebration(winnerName) {
+function showCelebration(winnerName, isWinner) {
   if (!celebrationEl) return;
-  celebrationEl.innerHTML = `<div class="celebration-confetti" aria-hidden="true">${Array.from({ length: 32 }, (_, i) => `<span style="--i:${i};--x:${Math.random() * 100}%;--delay:${Math.random() * 0.8}s;">${i % 3 === 0 ? "🎉" : i % 3 === 1 ? "🎊" : "✨"}</span>`).join("")}</div><div class="celebration-content"><div class="celebration-emojis">🎉 🎊 🎉</div><strong>커피는 ${escapeHtml(winnerName)}님이 쏩니다!</strong><div class="celebration-emojis bottom">🎊 ✨ 🎉</div></div>`;
+  celebrationEl.classList.toggle("celebration-safe", !isWinner);
+  const emojis = isWinner ? ["🎉", "🎊", "✨"] : ["😮‍💨", "😊", "☕"];
+  const topEmojis = isWinner ? "🎉 🎊 🎉" : "😮‍💨 😊 ☕";
+  const bottomEmojis = isWinner ? "🎊 ✨ 🎉" : "😊 ☕ ✨";
+  const headline = isWinner ? "당첨! 🎊" : "휴~ 살았다! 😮‍💨";
+  celebrationEl.innerHTML = `<div class="celebration-confetti" aria-hidden="true">${Array.from({ length: 32 }, (_, i) => `<span style="--i:${i};--x:${Math.random() * 100}%;--delay:${Math.random() * 0.8}s;">${emojis[i % emojis.length]}</span>`).join("")}</div><div class="celebration-content"><div class="celebration-emojis">${topEmojis}</div><div class="celebration-headline">${headline}</div><strong>커피는 ${escapeHtml(winnerName)}님이 쏩니다!</strong><div class="celebration-emojis bottom">${bottomEmojis}</div></div>`;
+  celebrationEl.classList.add("show");
+  window.setTimeout(() => celebrationEl.classList.remove("show"), 4200);
+}
   celebrationEl.classList.add("show");
   window.setTimeout(() => celebrationEl.classList.remove("show"), 4200);
 }
