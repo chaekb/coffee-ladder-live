@@ -145,9 +145,7 @@ function showCelebration(winnerName, isWinner) {
   celebrationEl.classList.add("show");
   window.setTimeout(() => celebrationEl.classList.remove("show"), 4200);
 }
-  celebrationEl.classList.add("show");
-  window.setTimeout(() => celebrationEl.classList.remove("show"), 4200);
-}
+
 
 function startTimer() {
   const id = setInterval(async () => {
