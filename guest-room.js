@@ -118,12 +118,16 @@ function showMyPath() {
 
   animating = true;
   statusEl.textContent = `🏃 ${nickname}님의 사다리 이동을 시작합니다!`;
-  resultArea.innerHTML = `<div class="result-card"><strong>${escapeHtml(nickname)}</strong>님의 말이 사다리를 내려가고 있습니다...</div>`;
+  resultArea.innerHTML = `<div class="result-card result-running"><strong>${escapeHtml(nickname)}</strong>님의 말이 사다리를 내려가고 있습니다...<span class="running-emoji">🏃☕</span></div>`;
 
   animateLadder(canvas, l.bridges || [], l.users || [], idx, finalIndex => {
     animating = false;
     statusEl.textContent = `🎉 ${nickname}님의 이동 완료!`;
-    resultArea.innerHTML = `<div class="result-card result-final"><strong>${escapeHtml(nickname)}</strong><span>🎉 ${finalIndex + 1}번에 도착!</span><small>다시 누르면 처음부터 다시 볼 수 있습니다.</small></div>`;
+    const isWinner = Number(l.winningIndex) === finalIndex;
+    const emoji = isWinner ? "🎉🥳" : "😮‍💨😊";
+    const headline = isWinner ? "당첨! 🎊" : "다행이다! 😄";
+    const winnerText = isWinner ? `당첨번호는 ${finalIndex + 1}번입니다!` : `도착번호는 ${finalIndex + 1}번입니다.`;
+    resultArea.innerHTML = `<div class="result-card result-final ${isWinner ? "is-winner" : "is-safe"}"><div class="result-emoji">${emoji}</div><strong>${headline}</strong><span>${winnerText}</span><small>다시 내 이름을 누르면 처음부터 다시 볼 수 있습니다.</small></div>`;
   });
 }
 
