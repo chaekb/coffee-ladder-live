@@ -1,5 +1,56 @@
 export const LADDER_ROWS=7;
-export function generateLadder(count){const bridges=[];for(let row=0;row<LADDER_ROWS;row++){for(let col=0;col<count-1;col++){if(Math.random()<.42){bridges.push({row,from:col,to:col+1});col++;}}}if(bridges.length===0&&count>=2)bridges.push({row:2,from:0,to:1});return bridges;}
+export function generateLadder(count) {
+  const bridges = [];
+
+  // 참가자 수에 따라 최소 가로줄 수 설정
+  const minBridges = Math.max(3, count);
+  const maxBridges = Math.max(minBridges + 2, count * 2);
+
+  let attempts = 0;
+
+  while (
+    bridges.length < minBridges &&
+    attempts < 100
+  ) {
+    bridges.length = 0;
+
+    for (let row = 0; row < LADDER_ROWS; row++) {
+      for (let col = 0; col < count - 1; col++) {
+
+        // 약 55% 확률로 가로줄 생성
+        if (Math.random() < 0.55) {
+          bridges.push({
+            row,
+            from: col,
+            to: col + 1
+          });
+
+          // 같은 행에서 연속 가로줄 방지
+          col++;
+        }
+
+        if (bridges.length >= maxBridges)
+          break;
+      }
+
+      if (bridges.length >= maxBridges)
+        break;
+    }
+
+    attempts++;
+  }
+
+  // 혹시 그래도 부족하면 강제로 추가
+  if (bridges.length === 0 && count >= 2) {
+    bridges.push({
+      row: 2,
+      from: 0,
+      to: 1
+    });
+  }
+
+  return bridges;
+}
 export function calculateResults(count,bridges){const results=[];for(let start=0;start<count;start++){let pos=start;for(let row=0;row<LADDER_ROWS;row++){const b=bridges.find(x=>x.row===row&&(x.from===pos||x.to===pos));if(b)pos=b.from===pos?b.to:b.from;}results.push(pos);}return results;}
 export function getPath(start, bridges) {
   let pos = start;
