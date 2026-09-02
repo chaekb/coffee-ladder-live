@@ -1,21 +1,27 @@
-# Coffee Ladder Live v4
+# Coffee Ladder Live v5
 
-## 포함 기능
-- 방장/참가자 페이지 완전 분리
-- 방번호 한 자리(0~9)
-- 방장 자동 참가
-- 참가자 실시간 목록 갱신
-- 방장만 사다리 생성
-- 모든 브라우저 동일 사다리 표시
-- 참가자 자신의 이동경로 확인
-- 방 생성 후 5분 만료 타이머
-- 모바일 UI/CSS
+v5는 v4를 기반으로 사다리 이동 경로를 텍스트가 아니라 **실제 애니메이션**으로 보여주는 버전입니다.
 
-## 중요
-`firebase.js`는 예시값입니다. 기존 GitHub 프로젝트에서 이미 정상 동작하던 `firebase.js`를 그대로 유지하거나, 새 파일의 설정값을 본인 Firebase 값으로 교체하세요.
+## 주요 변경
+- 사다리 가로줄 최소 개수를 늘려 지나치게 단순한 사다리 방지
+- 참가자가 자신의 이름을 누르면 말이 실제 사다리를 따라 내려가는 애니메이션 표시
+- 세로 이동과 가로 이동을 모두 시각적으로 표시
+- 도착 지점에 번호를 표시하고 도착 결과를 카드로 표시
+- 이동 경로 텍스트 `2 → 2 → 2...` 대신 시각적 경로 중심으로 변경
+- 사다리 행 수를 8행으로 조정
 
-## 업로드 권장
-GitHub 저장소의 기존 파일을 백업한 뒤, 이 ZIP의 파일들을 루트에 올리세요. 단, 기존 firebase.js가 정상이라면 새 firebase.js로 덮어쓰지 마세요.
+## Firebase 주의
+`firebase.js`는 기존에 정상 작동하던 Firebase 설정을 유지해서 사용하세요. ZIP에 들어 있는 값이 실제 프로젝트 설정과 다르면 기존 firebase.js의 내용을 그대로 사용하면 됩니다.
 
-## 만료 삭제 방식
-`expireAt`만으로 Realtime Database가 서버에서 자동 삭제되는 것은 아닙니다. v4는 방장/참가자 페이지가 열려 있는 동안 5분 만료를 감시하여 `remove()`를 호출합니다. 완전한 서버측 자동 TTL은 Cloud Functions나 별도 서버가 필요합니다.
+## 실행
+GitHub Pages에 기존 파일을 교체해서 업로드하세요.
+
+구성:
+- index.html
+- create-room.html / create-room.js
+- host-room.html / host-room.js
+- join-room.html / join-room.js
+- guest-room.html / guest-room.js
+- ladder-common.js
+- firebase.js
+- style.css
