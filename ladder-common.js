@@ -1,41 +1,28 @@
 export const LADDER_ROWS = 8;
 
 export function generateLadder(count) {
-  if (count < 2) return [];
-
   const bridges = [];
-  const minBridges = Math.max(4, count);
-  const maxBridges = Math.max(minBridges + 2, count * 2);
+  const probability = 0.58;
 
-  // 각 행에 무작위 가로줄을 만들되, 같은 행에서 겹치지 않게 생성
   for (let row = 0; row < LADDER_ROWS; row++) {
     for (let col = 0; col < count - 1; col++) {
-      if (Math.random() < 0.48 && bridges.length < maxBridges) {
+      if (Math.random() < probability) {
         bridges.push({ row, from: col, to: col + 1 });
-        col++; // 같은 행에서 바로 옆 가로줄이 붙지 않도록 함
+        col++; // 같은 높이에서 연속 가로줄 방지
       }
     }
   }
 
-  // 너무 적게 생성된 경우 추가로 채움
-  if (bridges.length < minBridges) {
-    const candidates = [];
-    for (let row = 0; row < LADDER_ROWS; row++) {
-      for (let col = 0; col < count - 1; col++) {
-        candidates.push({ row, from: col, to: col + 1 });
-      }
-    }
-
-    candidates.sort(() => Math.random() - 0.5);
-    for (const candidate of candidates) {
-      if (bridges.length >= minBridges) break;
-      const conflict = bridges.some(
-        b => b.row === candidate.row &&
-          (b.from === candidate.from || b.from === candidate.to ||
-           b.to === candidate.from || b.to === candidate.to)
-      );
-      if (!conflict) bridges.push(candidate);
-    }
+  // 너무 단순한 사다리를 피함
+  const minimum = Math.max(3, count);
+  let guard = 0;
+  while (bridges.length < minimum && guard < 50) {
+    const row = Math.floor(Math.random() * LADDER_ROWS);
+    const col = Math.floor(Math.random() * Math.max(1, count - 1));
+    const exists = bridges.some(b => b.row === row && (b.from === col || b.to === col));
+    const adjacent = bridges.some(b => b.row === row && (b.from === col + 1 || b.to === col + 1));
+    if (!exists && !adjacent && count >= 2) bridges.push({ row, from: col, to: col + 1 });
+    guard++;
   }
 
   return bridges.sort((a, b) => a.row - b.row || a.from - b.from);
@@ -54,34 +41,6 @@ export function calculateResults(count, bridges) {
   return results;
 }
 
-// 실제 애니메이션에 사용할 좌표를 반환한다.
-export function getPathPoints(start, bridges, count, canvas) {
-  const w = canvas.width;
-  const h = canvas.height;
-  const side = Math.max(60, Math.min(90, w * 0.10));
-  const top = 72;
-  const bottom = h - 58;
-  const gap = (w - side * 2) / (count - 1);
-  const rowGap = (bottom - top) / (LADDER_ROWS + 1);
-
-  let pos = start;
-  const points = [{ x: side + pos * gap, y: top }];
-
-  for (let row = 0; row < LADDER_ROWS; row++) {
-    const y = top + (row + 1) * rowGap;
-    points.push({ x: side + pos * gap, y });
-
-    const b = bridges.find(x => x.row === row && (x.from === pos || x.to === pos));
-    if (b) {
-      pos = b.from === pos ? b.to : b.from;
-      points.push({ x: side + pos * gap, y });
-    }
-  }
-
-  points.push({ x: side + pos * gap, y: bottom });
-  return { points, finalIndex: pos };
-}
-
 export function getPath(start, bridges) {
   let pos = start;
   const path = [pos];
@@ -95,21 +54,25 @@ export function getPath(start, bridges) {
   return path;
 }
 
-function getLayout(canvas, count) {
+function geometry(canvas, users) {
   const w = canvas.width;
   const h = canvas.height;
-  const side = Math.max(60, Math.min(90, w * 0.10));
-  const top = 72;
-  const bottom = h - 58;
-  const gap = (w - side * 2) / (count - 1);
+  const side = Math.max(65, Math.min(95, w * 0.10));
+  const top = 78;
+  const bottom = h - 72;
+  const gap = (w - side * 2) / (users.length - 1);
   const rowGap = (bottom - top) / (LADDER_ROWS + 1);
   return { w, h, side, top, bottom, gap, rowGap };
+}
+
+function point(g, index, y) {
+  return { x: g.side + index * g.gap, y };
 }
 
 export function drawLadder(canvas, bridges, users, highlightStart = null) {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
-  const { w, h, side, top, bottom, gap, rowGap } = getLayout(canvas, users?.length || 2);
+  const w = canvas.width, h = canvas.height;
   ctx.clearRect(0, 0, w, h);
 
   if (!users || users.length < 2) {
@@ -120,116 +83,122 @@ export function drawLadder(canvas, bridges, users, highlightStart = null) {
     return;
   }
 
+  const g = geometry(canvas, users);
   ctx.lineCap = "round";
-  ctx.lineJoin = "round";
   ctx.textAlign = "center";
-  ctx.font = "bold 18px sans-serif";
+  ctx.font = "18px sans-serif";
   ctx.fillStyle = "#3b2a22";
+  users.forEach((name, i) => ctx.fillText(name, g.side + i * g.gap, 35));
 
-  users.forEach((name, i) => {
-    ctx.fillText(name, side + i * gap, 34);
-  });
-
-  // 세로줄
   ctx.lineWidth = 4;
   ctx.strokeStyle = "#c9b3a3";
   for (let i = 0; i < users.length; i++) {
-    const x = side + i * gap;
-    ctx.beginPath();
-    ctx.moveTo(x, top);
-    ctx.lineTo(x, bottom);
-    ctx.stroke();
+    const x = g.side + i * g.gap;
+    ctx.beginPath(); ctx.moveTo(x, g.top); ctx.lineTo(x, g.bottom); ctx.stroke();
   }
 
-  // 가로줄
   ctx.strokeStyle = "#7a4f37";
   bridges.forEach(b => {
-    const y = top + (b.row + 1) * rowGap;
-    const x1 = side + b.from * gap;
-    const x2 = side + b.to * gap;
-    ctx.beginPath();
-    ctx.moveTo(x1, y);
-    ctx.lineTo(x2, y);
-    ctx.stroke();
+    const y = g.top + (b.row + 1) * g.rowGap;
+    const x1 = g.side + b.from * g.gap;
+    const x2 = g.side + b.to * g.gap;
+    ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
   });
 
   if (highlightStart !== null && highlightStart >= 0) {
-    const x = side + highlightStart * gap;
-    ctx.beginPath();
-    ctx.arc(x, top - 13, 11, 0, Math.PI * 2);
-    ctx.fillStyle = "#6f4e37";
-    ctx.fill();
+    const p = point(g, highlightStart, g.top);
+    ctx.beginPath(); ctx.arc(p.x, p.y, 9, 0, Math.PI * 2);
+    ctx.fillStyle = "#3b2a22"; ctx.fill();
   }
 }
 
-export function animateLadder(canvas, bridges, users, start, onComplete) {
+// 실제 사다리를 따라 움직이는 애니메이션
+export function animateLadder(canvas, bridges, users, startIndex, onComplete) {
   if (!canvas || !users || users.length < 2) return;
 
-  const { points, finalIndex } = getPathPoints(start, bridges, users.length, canvas);
-  const durationPerSegment = 320;
-  const totalDuration = Math.max(1600, (points.length - 1) * durationPerSegment);
-  const startedAt = performance.now();
+  const ctx = canvas.getContext("2d");
+  const g = geometry(canvas, users);
+  let current = { index: startIndex, y: g.top };
+  let segment = 0;
+  let segmentStart = null;
+  let finished = false;
+  const speed = 320; // px/sec
 
-  function drawFrame(now) {
-    const elapsed = now - startedAt;
-    const progress = Math.min(1, elapsed / totalDuration);
-    const scaled = progress * (points.length - 1);
-    const segment = Math.min(points.length - 2, Math.floor(scaled));
-    const local = Math.min(1, scaled - segment);
+  const segments = [];
+  for (let row = 0; row < LADDER_ROWS; row++) {
+    const y = g.top + (row + 1) * g.rowGap;
+    const b = bridges.find(x => x.row === row && (x.from === current.index || x.to === current.index));
+    const nextIndex = b ? (b.from === current.index ? b.to : b.from) : current.index;
+    segments.push({ from: { index: current.index, y: row === 0 ? g.top : g.top + row * g.rowGap }, to: { index: current.index, y } });
+    if (b) segments.push({ from: { index: current.index, y }, to: { index: nextIndex, y }, bridge: true });
+    current.index = nextIndex;
+  }
+  segments.push({ from: { index: current.index, y: g.top + LADDER_ROWS * g.rowGap }, to: { index: current.index, y: g.bottom } });
 
-    drawLadder(canvas, bridges, users, start);
-
-    const ctx = canvas.getContext("2d");
-    ctx.lineWidth = 9;
-    ctx.strokeStyle = "#b34848";
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-
-    for (let i = 1; i <= segment; i++) {
-      ctx.lineTo(points[i].x, points[i].y);
-    }
-
-    const p1 = points[segment];
-    const p2 = points[segment + 1];
-    const currentX = p1.x + (p2.x - p1.x) * local;
-    const currentY = p1.y + (p2.y - p1.y) * local;
-    ctx.lineTo(currentX, currentY);
-    ctx.stroke();
-
-    // 움직이는 말
-    ctx.beginPath();
-    ctx.arc(currentX, currentY, 12, 0, Math.PI * 2);
-    ctx.fillStyle = "#b34848";
-    ctx.fill();
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = "#fff";
-    ctx.stroke();
-
-    if (progress < 1) {
-      requestAnimationFrame(drawFrame);
-    } else {
-      // 도착점 강조
-      const end = points[points.length - 1];
-      ctx.beginPath();
-      ctx.arc(end.x, end.y + 10, 18, 0, Math.PI * 2);
-      ctx.fillStyle = "#b34848";
-      ctx.fill();
-      ctx.font = "bold 16px sans-serif";
-      ctx.fillStyle = "#fff";
-      ctx.textAlign = "center";
-      ctx.fillText(String(finalIndex + 1), end.x, end.y + 16);
-      if (onComplete) onComplete(finalIndex);
-    }
+  function redrawBase() {
+    drawLadder(canvas, bridges, users);
   }
 
-  requestAnimationFrame(drawFrame);
+  function animate(now) {
+    if (segment >= segments.length) {
+      redrawBase();
+      const finalIndex = current.index;
+      const finalPoint = point(g, finalIndex, g.bottom);
+      ctx.beginPath(); ctx.arc(finalPoint.x, finalPoint.y, 13, 0, Math.PI * 2);
+      ctx.fillStyle = "#3b2a22"; ctx.fill();
+      ctx.font = "bold 20px sans-serif"; ctx.textAlign = "center";
+      ctx.fillStyle = "#3b2a22";
+      ctx.fillText(`${finalIndex + 1}번 도착!`, finalPoint.x, g.bottom + 45);
+      if (!finished) { finished = true; if (onComplete) onComplete(finalIndex); }
+      return;
+    }
+
+    if (segmentStart === null) segmentStart = now;
+    const s = segments[segment];
+    const from = point(g, s.from.index, s.from.y);
+    const to = point(g, s.to.index, s.to.y);
+    const distance = Math.hypot(to.x - from.x, to.y - from.y);
+    const duration = Math.max(180, distance / speed * 1000);
+    const t = Math.min(1, (now - segmentStart) / duration);
+    const x = from.x + (to.x - from.x) * t;
+    const y = from.y + (to.y - from.y) * t;
+
+    redrawBase();
+
+    // 지금까지 지나온 경로를 굵게 표시
+    ctx.strokeStyle = "#3b2a22";
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    let p = point(g, startIndex, g.top);
+    ctx.moveTo(p.x, p.y);
+    for (let i = 0; i < segment; i++) {
+      const a = point(g, segments[i].from.index, segments[i].from.y);
+      const b = point(g, segments[i].to.index, segments[i].to.y);
+      ctx.lineTo(b.x, b.y);
+    }
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    // 이동하는 말
+    ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI * 2);
+    ctx.fillStyle = "#3b2a22"; ctx.fill();
+    ctx.beginPath(); ctx.arc(x - 3, y - 3, 3, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff"; ctx.fill();
+
+    if (t >= 1) {
+      current.index = s.to.index;
+      segment++;
+      segmentStart = now;
+    }
+    requestAnimationFrame(animate);
+  }
+
+  redrawBase();
+  requestAnimationFrame(animate);
 }
 
 export function formatRemaining(expireAt) {
   const r = Math.max(0, expireAt - Date.now());
-  const m = Math.floor(r / 60000);
-  const s = Math.floor((r % 60000) / 1000);
+  const m = Math.floor(r / 60000), s = Math.floor((r % 60000) / 1000);
   return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
 }
