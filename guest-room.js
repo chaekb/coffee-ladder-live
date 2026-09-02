@@ -13,6 +13,7 @@ const statusEl = document.getElementById("ladderStatus");
 const canvas = document.getElementById("ladderCanvas");
 const resultArea = document.getElementById("resultArea");
 const timerEl = document.getElementById("roomTimer");
+const celebrationEl = document.getElementById("celebration");
 let currentRoomData = null;
 let registeredKey = sessionStorage.getItem("userKey:" + room);
 let animating = false;
@@ -126,9 +127,18 @@ function showMyPath() {
     const isWinner = Number(l.winningIndex) === finalIndex;
     const emoji = isWinner ? "🎉🥳" : "😮‍💨😊";
     const headline = isWinner ? "당첨! 🎊" : "다행이다! 😄";
-    const winnerText = isWinner ? `당첨번호는 ${finalIndex + 1}번입니다!` : `도착번호는 ${finalIndex + 1}번입니다.`;
-    resultArea.innerHTML = `<div class="result-card result-final ${isWinner ? "is-winner" : "is-safe"}"><div class="result-emoji">${emoji}</div><strong>${headline}</strong><span>${winnerText}</span><small>다시 내 이름을 누르면 처음부터 다시 볼 수 있습니다.</small></div>`;
+    const winnerStartIndex = Array.isArray(l.results) ? l.results.findIndex(result => Number(result) === Number(l.winningIndex)) : -1;
+    const winnerName = winnerStartIndex >= 0 ? l.users[winnerStartIndex] : "당첨자";
+    resultArea.innerHTML = `<div class="result-card result-final ${isWinner ? "is-winner" : "is-safe"}"><div class="result-emoji">${emoji}</div><strong>${headline}</strong><small>다시 내 이름을 누르면 처음부터 다시 볼 수 있습니다.</small></div>`;
+    if (isWinner) showCelebration(winnerName);
   });
+}
+
+function showCelebration(winnerName) {
+  if (!celebrationEl) return;
+  celebrationEl.innerHTML = `<div class="celebration-confetti" aria-hidden="true">${Array.from({ length: 32 }, (_, i) => `<span style="--i:${i};--x:${Math.random() * 100}%;--delay:${Math.random() * 0.8}s;">${i % 3 === 0 ? "🎉" : i % 3 === 1 ? "🎊" : "✨"}</span>`).join("")}</div><div class="celebration-content"><div class="celebration-emojis">🎉 🎊 🎉</div><strong>커피는 ${escapeHtml(winnerName)}님이 쏩니다!</strong><div class="celebration-emojis bottom">🎊 ✨ 🎉</div></div>`;
+  celebrationEl.classList.add("show");
+  window.setTimeout(() => celebrationEl.classList.remove("show"), 4200);
 }
 
 function startTimer() {
