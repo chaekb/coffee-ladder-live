@@ -142,10 +142,10 @@ function showCelebration(winnerName, isWinner) {
   const bottomEmojis = isWinner ? "🎊 ✨ 🎉" : "😊 ☕ ✨";
   const headline = isWinner ? "당첨! 🎊" : "휴~ 살았다! 😮‍💨";
   celebrationEl.innerHTML = `<div class="celebration-confetti" aria-hidden="true">${Array.from({ length: 32 }, (_, i) => `<span style="--i:${i};--x:${Math.random() * 100}%;--delay:${Math.random() * 0.8}s;">${emojis[i % emojis.length]}</span>`).join("")}</div><div class="celebration-content"><div class="celebration-emojis">${topEmojis}</div><div class="celebration-headline">${headline}</div><strong>커피는 ${escapeHtml(winnerName)}님이 쏩니다!</strong><div class="celebration-emojis bottom">${bottomEmojis}</div></div>`;
-}
   celebrationEl.classList.add("show");
   window.setTimeout(() => celebrationEl.classList.remove("show"), 4200);
 }
+
 
 function startTimer() {
   const id = setInterval(async () => {
@@ -154,7 +154,7 @@ function startTimer() {
     if (Date.now() >= currentRoomData.expireAt) {
       clearInterval(id);
       try { await remove(ref(db, "rooms/" + room)); } catch (e) { console.error(e); }
-      alert("방 생성 후 10분이 지나 자동 종료되었습니다.");
+      alert("방 생성 후 5분이 지나 자동 종료되었습니다.");
       location.href = "./index.html";
     }
   }, 1000);
